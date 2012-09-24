@@ -1,0 +1,14 @@
+# gedit backups
+*~
+
+# object files
+*.o
+
+# moc, resources and ui files
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# debug and release directories
+Debug/
+Release/
