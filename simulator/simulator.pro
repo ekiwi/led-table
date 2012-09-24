@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-TARGET = LED_Table_Simulator
+TARGET = simulator
 TEMPLATE = app
 
 
