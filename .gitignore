@@ -12,3 +12,15 @@ ui_*.h
 # debug and release directories
 Debug/
 Release/
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+.metadata/
+
+# local settings
+org.eclipse.cdt.managedbuilder.core.prefs
+
