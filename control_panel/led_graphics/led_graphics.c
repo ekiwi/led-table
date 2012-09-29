@@ -7,7 +7,6 @@
 
 #include "led_graphics.h"
 #include "resources/font_ubuntu.h"
-#include "hal.h"
 
 led_color led_color_rand(){
     led_color c;

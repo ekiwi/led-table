@@ -2,7 +2,9 @@
 #include <QDebug>
 #include <QDateTime>
 #include "ledtablewidget.h"
-#include "led_graphics.h"
+
+#define LED_WIDTH 8
+#define LED_HEIGHT 8
 
 LEDTableWidget::LEDTableWidget(QWidget *parent) :
     QWidget(parent)
