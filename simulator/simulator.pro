@@ -14,20 +14,20 @@ SOURCES +=\
     main.cpp \
     gui/ledtablewidget.cpp \
     gui/mainwindow.cpp \
-    ../../animations/*.c \
-    /home/kevin/workspace/avr/LEDTabelControlPanelFW01/led_graphics/*.c
+    ../animations/*.c \
+    ../control_panel/led_graphics/*.c
 
 HEADERS  +=\
     gui/ledtablewidget.h \
     gui/mainwindow.h \
-    ../../animations/headers/*.h \
-    /home/kevin/workspace/avr/LEDTabelControlPanelFW01/led_graphics/*.h
+    ../animations/headers/*.h \
+    ../control_panel/led_graphics/*.h
 
 FORMS    += gui/mainwindow.ui
 
 INCLUDEPATH +=\
-    ../../animations/headers/ \
-    ../../animations/ \
-    /home/kevin/workspace/avr/LEDTabelControlPanelFW01/led_graphics/
+    ../animations/headers/ \
+    ../animations/ \
+    ../control_panel/led_graphics/
 
 QMAKE_CFLAGS += -std=c99

@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QDateTime>
 #include "ledtablewidget.h"
-#include "led_graphics/led_graphics.h"
+#include "led_graphics.h"
 
 LEDTableWidget::LEDTableWidget(QWidget *parent) :
     QWidget(parent)
