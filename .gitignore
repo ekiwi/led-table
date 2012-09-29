@@ -12,6 +12,11 @@ ui_*.h
 # debug and release directories
 Debug/
 Release/
+*_PATH_Release/
+*_PATH_Debug/
+
+# qt creator user project
+*.pro.user
 
 # External tool builders
 .externalToolBuilders/
@@ -23,4 +28,3 @@ Release/
 
 # local settings
 org.eclipse.cdt.managedbuilder.core.prefs
-
