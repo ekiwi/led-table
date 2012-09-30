@@ -28,3 +28,9 @@ Release/
 
 # local settings
 org.eclipse.cdt.managedbuilder.core.prefs
+
+# Ignore Eagle Backup Files #
+#############################
+*.s#?
+*.b#?
+*.l#?
