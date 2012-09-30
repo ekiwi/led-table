@@ -30,4 +30,4 @@ INCLUDEPATH +=\
     ../animations/ \
     ../control_panel/led_graphics/
 
-QMAKE_CFLAGS += -std=c99
+QMAKE_CFLAGS += -std=gnu99
