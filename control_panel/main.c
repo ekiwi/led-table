@@ -1,3 +1,13 @@
+/*
+ * Main Routine
+ *
+ * Copyright (C) 2012 Electron Kiwi
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
 #include <util/delay.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
