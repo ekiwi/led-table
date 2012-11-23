@@ -1,0 +1,87 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[german]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{listings} \lstset{numbers=left, numbersep=5pt}
+\begin{document}
+\tableofcontents
+
+\section{Benötigte Programme installieren}
+Um eigene Animationen auf dem PC schreiben und testen zu können werden zwei Programme benötigt:
+\begin{itemize}
+	\item \textbf{Git} zum Herunterladen des Quellcodes
+	\item \textbf{QtCreator} zum Compilieren des Simulators und der eigenen Animation
+\end{itemize}
+Im Folgenden wird erklärt, wie diese unter Windows und Linux installiert werden.
+
+\subsection{Git}
+Git ist ein Quellcodeverwaltungsprogramm mit dem man den Quellcode für den LED-Tisch herunterladen und auf dem neusten Stand halten kann.
+
+\subsubsection{Windows}
+Für Windows kann man auf der folgenden Website Git herunterladen:
+\begin{lstlisting}
+http://code.google.com/p/msysgit/downloads/list
+\end{lstlisting}
+Hier muss der ''\textit{Full installer for official Git for Windows}'' heruntergeladen werden. Zur Zeit ist Version 1.8.0 die neuste.
+Die exe Datei muss also heruntergeladen und dann auf dem PC ausgeführt werden. Es sollte genügen, einfach die Standardversion zu installieren. Wichtig ist, dass...
+
+\subsubsection{Linux und OSX}
+Unter Linux und OSX installiert man Git einfach mit dem Paketmanager deiner Distribution:
+\begin{lstlisting}
+$ apt-get install git # Ubuntu
+$ yum install git     # Fedora
+$ brew install git    # OSX
+\end{lstlisting}
+
+\subsection{QtCreator}
+QtCreator ist eine IDE (\textit{Integrated Development Environment}) für C++ im Zusammenspiel mit der Qt Bibilothek.
+Zusätzlich kann man mit QtCreator auch C compilieren und somit können die Animationen für den LED-Tisch, die ja in reinem C geschrieben sind, zusammen mit dem Simulator in QtCreator, zum Testen auf dem PC compiliert werden.
+
+\subsubsection{Windows}
+Für Windows kann man sich QtCreator z.B. von Heise.de herunterladen:
+\begin{lstlisting}
+http://www.heise.de/download/qt-creator-1163227.html
+\end{lstlisting}
+Nach dem Download einfach die exe ausführen und installieren.
+
+\subsubsection{Linux und OSX}
+Unter Linux und OSX installiert man QtCreator einfach mit dem Paketmanager deiner Distribution:
+\begin{lstlisting}
+$ apt-get install qtcreator # Ubuntu
+$ yum install qtcreator     # Fedora
+$ brew install qtcreator    # OSX
+\end{lstlisting}
+
+\section{Quellcode herunterladen}
+So, jetzt geht es darum, den Quellcode herunterzuladen. Dieser wird auf der Seite \textit{github.com/ekiwi/led-table} kostenlos zur Verfügung gestellt.
+Dort findet man den Link, den man benötigt, um sich den Code mit Hilfe von \textbf{Git} herunterzuladen:
+\begin{lstlisting}
+https://github.com/ekiwi/led-table.git
+\end{lstlisting}
+Unter Windows kann man den Quellcode nun über eine GUI herunterladen, unter Linux/OSX wird dies über die Shell gemacht. Das geht übrigens auch unter Windows. Einfach mal im Startmenü nach \textit{Git Shell} suchen.
+
+\subsection{Windows}
+Als erstes muss die \textit{Git Gui} geöffnet werden. Dort einfach auf \textit{Clone Existing Repository} klicken um den Quellcode auf deinen PC zu ''kopieren''.
+Als URL einfach den oben genannten eintragen und als \textit{Directory} einfach einen Ordner auf der Festplatte wählen, in den der Quellcode kopiert werden soll.
+Das Programm arbeitet jetzt ein paar Sekunden bis Minuten und dann sind alle aktuellen Dateien auf deinem PC.
+
+\subsection{Linux und OSX}
+Unter Linux, OSX oder auch unter Windows in der Kommandozeile einfach in eine Verzeichnis navigieren, in das der Quellcode kopiert werden soll (bei mir ist das /home/username/) und dann git clone ausführen:
+\begin{lstlisting}
+git clone https://github.com/ekiwi/led-table.git led-tisch
+\end{lstlisting}
+Dies erstellt einen neuen Ordner led-tisch, in dem jetzt alle benötigten Dateien liegen.
+
+\section{Simulator kompilieren}
+Bevor erste eigene Animationen erstellt werden können, sollte erst einmal versucht werden den Simulator zu kompilieren.
+Dazu muss QtCreator gestartet und die Datei \textit{simulator/simulator.pro} aus dem Quellcodeverzeichnis geöffnet werden.
+Dies ist das Simulator Projekt, welches alle Dateien enthält, die für den Simulator benötigt werden.
+Sollte beim ersten Öffnen des Projekts ein Fenster zum \textit{Ziel einrichten} erscheinen, ist es das Beste die Standardoptionen unangetastet zu lassen und einfach auf \textit{Abschließen} zu klicken.
+Zum Erstellen des Simulators einfach auf den grünen Pfeil im unteren Bereich der linken Leiste im QtCreator klicken. Jetzt sollte nach kurzer Zeit das Fenster des Simulators zu sehen sein. Hier kann wie beim Tisch zwischen den Animationen hin und her gewechselt werden.
+
+\section{Simulation verändern}
+
+
+\end{document}
