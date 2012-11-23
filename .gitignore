@@ -12,8 +12,8 @@ ui_*.h
 # debug and release directories
 Debug/
 Release/
-*_PATH_Release/
-*_PATH_Debug/
+*_Release/
+*_Debug/
 
 # qt creator user project
 *.pro.user

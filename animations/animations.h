@@ -5,7 +5,7 @@
 #include "led_graphics.h"
 
 #define ANIMATION_NUMBER 20
-#define START_ANIMATION 8
+#define START_ANIMATION 13
 
 /* Animation Pointers
 *  - To add  new Animation, include header file and add define
