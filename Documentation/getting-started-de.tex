@@ -1,11 +1,30 @@
 \documentclass[10pt,a4paper]{article}
+\usepackage{a4wide}
 \usepackage[utf8]{inputenc}
 \usepackage[german]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{color}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
 \usepackage{listings} \lstset{numbers=left, numbersep=5pt}
+\lstset{language=bash, breaklines=true, breakatwhitespace=true} \lstset{keywordstyle=\color{blue}, commentstyle=\color{dkgreen}, stringstyle=\color{mauve}}
 \begin{document}
+\begin{titlepage}
+\author{Kevin Läufer}
+\title{LED-Tisch - Erstellen von Animationen}
+\date{\today}
+\end{titlepage}
+
+\maketitle
+
+Dieses Werk bzw. Inhalt steht unter einer Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 3.0 Unported Lizenz.
+
+\textit{http://creativecommons.org/licenses/by-sa/3.0/deed.de}
+
+
 \tableofcontents
 
 \section{Benötigte Programme installieren}
@@ -25,7 +44,7 @@ Für Windows kann man auf der folgenden Website Git herunterladen:
 http://code.google.com/p/msysgit/downloads/list
 \end{lstlisting}
 Hier muss der ''\textit{Full installer for official Git for Windows}'' heruntergeladen werden. Zur Zeit ist Version 1.8.0 die neuste.
-Die exe Datei muss also heruntergeladen und dann auf dem PC ausgeführt werden. Es sollte genügen, einfach die Standardversion zu installieren. Wichtig ist, dass...
+Die exe Datei muss also heruntergeladen und dann auf dem PC ausgeführt werden. Es sollte genügen, einfach die Standardversion zu installieren. Einfach immer auf \textit{next} klicken.
 
 \subsubsection{Linux und OSX}
 Unter Linux und OSX installiert man Git einfach mit dem Paketmanager deiner Distribution:
@@ -81,7 +100,125 @@ Dies ist das Simulator Projekt, welches alle Dateien enthält, die für den Simu
 Sollte beim ersten Öffnen des Projekts ein Fenster zum \textit{Ziel einrichten} erscheinen, ist es das Beste die Standardoptionen unangetastet zu lassen und einfach auf \textit{Abschließen} zu klicken.
 Zum Erstellen des Simulators einfach auf den grünen Pfeil im unteren Bereich der linken Leiste im QtCreator klicken. Jetzt sollte nach kurzer Zeit das Fenster des Simulators zu sehen sein. Hier kann wie beim Tisch zwischen den Animationen hin und her gewechselt werden.
 
-\section{Simulation verändern}
+\lstset{language=C}
 
+\section{Simulation verändern}
+Jetzt, da der Simulator erfolgreich kompiliert wurde, bietet es sich an, erst einmal eine Animation zu verändern. Dies erspart ein paar Modifikationen, die nötig sind, um neue Animationen hinzuzufügen.
+Die Default Animation bietet sich hierfür an. Sie ist in QtCreator unter \textit{Quelldateien} im Unterordner \textit{animations} zu finden. Dort enthält die Datei \textit{$ani\_default.c$} den gesamten Code für die Default Animation, welche beim Start des Simulators automatisch angezeigt wird.
+
+\subsection{Das Grundgerüst der Default Animation}
+Wenn man den Simulator startet sieht man, dass die Default Animation einfach ein rotes Rechteck auf schwarzem Hintergrund zeichnet.
+Um zu verstehen, was im Hintergrund passiert schauen wir uns den Quellcode in der geöffneten C-Datei (\textit{$ani\_default.c$}) an:
+\lstinputlisting[frame=single]{../animations/ani_default.c}
+\begin{itemize}
+\item \textbf{Zeile 1}: Hier werden die Definitionen von Funktionen und Variablen geladen, die von allen Animationen benutzt werden
+
+\item \textbf{Zeile 6-9}: Hier wird eine Struktur definiert, die alle globalen Variablen der Animation enthält. Bei der Default Animation sind das erst einmal keine, wir werden aber im Verlauf dieser Einführung ein paar hinzufügen. \textit{Hinweis}: Während die \textit{$gloabl\_data$} Struktur bei allen Animationen gleich heißt (und auch heißen muss), enthält sie je nach Animation unterschiedliche Daten, die in diesen Zeilen individuell definiert werden müssen.
+
+\item \textbf{Zeile 14}: Hier wird die \textit{init} Funktion der Default Animation deklariert. Man beachtet den Namen, der sich aus \textit{$ani\_$}, Name der Animation und \textit{$\_init$} zusammensetzt. Diese Funktion wird aufgerufen, wenn die Animation in den Speicher geladen wird und dient hauptsächlich dazu den Speicherplatz für die globalen Variablen anzufordern, zu ''allokieren'' (\textit{Zeile 15}). War dies erfolgreich (Abfrage, \textit{Zeile 17}), so können die globalen Variablen initialisiert werden (\textit{Zeile 18}). Dann liefert die Funktion \textbf{true} zurück. Ansonsten, wenn es einen Fehler gab, wenn \lstinline|global_vars == NULL|, liefert die Funktion \textbf{false} zurück. Dies führt hinter den Kulissen dazu, dass die Animation nicht ausgeführt wird.
+
+\item \textbf{Zeile 28}: Die Funktion \textit{$ani\_default\_run$} wird aufgerufen, wenn ein neues Bild der Animation gezeichnet werden muss. Da der LED-Tisch ca. 50 mal pro Sekunde ein neues Bild anzeigen kann, wird die Funktion als mit einer Frequenz von 50 Hz aufgerufen. Dies sollte man im Hinterkopf behalten, damit man nicht zu schnell die Bilder verändert. Verschiebt man einen farbigen Punkt z.B. jedes Bild um ein nach rechts, so dauert es nur $ T * Breite = 1/f * 8 = 0.16s = 160ms$ bis der Punkt einmal durch das Bild gewandert ist.
+
+\item \textbf{Zeile 29}: Hier wird erst einmal die gesamte Zeichenfläche (engl. \textit{canvas}) mit der Farbe schwarz initialisiert. Dies ist notwendig, wenn man nicht auf alle Pixel etwas zeichnet, da der Inhalt der Zeichenfläche, beim Aufruf der \textit{run} Funktion, nicht definiert ist.
+
+\item \textbf{Zeile 30}: Hier wird ein Rechteck der Breite und Höhe 8 an der Koordinate 0,0 gezeichnet. Als Farbe des Rechtecks wird Rot gewählt.
+\end{itemize}
+
+Das waren bereits die wichtigsten Bestandteile der Animationsdatei. Als nächstes werden wir den Code verändern.
+
+\subsection{Anpassung der Default Animation}
+\subsubsection{Farben}
+Eine sehr einfache Anpassung ist das Verändern der Hintergrundfarbe. Dazu schauen wir uns \textit{Zeile 29} noch einmal genauer an. Die Funktion \lstinline|clr_image| erwartet zwei Argumente. Der zweite ist eine Referenz auf die aktuelle Zeichenfläche. Der erste ist hier interessant: Mit ihm wird der Funktion eine Farbe übergeben, mit der die Zeichenfläche gefüllt wird. Die Farbe wird mit einem Aufruf von \lstinline|led_color_(uint8_t red, uint8_t green, uint8_t blue)| erzeugt. Diese Funktion erwartet einen Rot-, Grün-, und Blauanteil und liefert eine Farbe als C-Struktur zurück. Durch die richtige Mischung von Rot, Grün und Blau kann durch Farbaddition jede beliebige Farbe dargestellt werden. Will man nun z.B. Weiß als Hintergrundfarbe haben, so muss man nur Rot, Grün und Blau auf jeweils 255 bzw. 0xff in Hexadezimalschreibweise setzen: \lstinline|led_color_(0xff,0xff,0xff)|.
+
+\textbf{Tipp}: Kompiliere den Simulator nach jeder Änderung neu um zu sehen, wie diese deine Animation beeinflusst.
+
+Die Farbe des gezeichneten Rechtecks kann auf die selbe Weise geändert werden. Am besten du experimentierst etwas mit verschiedenen Intensitäten der Farbkomponenten. Bedenke aber, dass nur Werte von \textit{0-255} hierfür zulässig sind.
+
+\subsubsection{Verschieben des Rechtecks}
+Bevor das Rechteck verschoben werden kann, ist es wichtig, sich über das, der Zeichnung zu Grunde liegende Koordinatensystem klar zu werden. Denn anders als in der Mathematik liegt hier der Nullpunkt nicht in der links unteren, sondern in der links oberen Ecke. Als x bzw. als y Werte sind Zahlen von 0-7 gültig. Die Koordinaten der Pixel sehen also aus wie folgt:
+
+
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline 
+0/0 & 1/0 & 2/0 & 3/0 & 4/0 & 5/0 & 6/0 & 7/0 \\ 
+\hline 
+0/1 & 1/1 & 2/1 & 3/1 & 4/1 & 5/1 & 6/1 & 7/1 \\
+\hline 
+0/2 & 1/2 & 2/2 & 3/2 & 4/2 & 5/2 & 6/2 & 7/2 \\  
+\hline 
+0/3 & 1/3 & 2/3 & 3/3 & 4/3 & 5/3 & 6/3 & 7/3 \\ 
+\hline 
+0/4 & 1/4 & 2/4 & 3/4 & 4/4 & 5/4 & 6/4 & 7/4 \\ 
+\hline 
+0/5 & 1/5 & 2/5 & 3/5 & 4/5 & 5/5 & 6/5 & 7/5 \\  
+\hline 
+0/6 & 1/6 & 2/6 & 3/6 & 4/6 & 5/6 & 6/6 & 7/6 \\ 
+\hline 
+0/7 & 1/7 & 2/7 & 3/7 & 4/7 & 5/7 & 6/7 & 7/7 \\  
+\hline 
+\end{tabular}
+
+Wenn also das Rechteck nach rechts verschoben werden soll, dann muss bei dessen Definition der X Wert um ein erhöht werden:
+\begin{lstlisting}
+draw_rect(led_rect_(1,0,8,8), led_color_(0xFF,0x00,0x00), canvas);
+\end{lstlisting}
+Am besten du probierst verschiedene X sowie Y Koordinaten (das zweite Argument von \textit{$led\_rect\_$}) aus.
+
+\subsubsection{Verschiebungsanimation}
+Als nächstes soll sich etwas bewegen: Das Rechteck soll fortwährend über den Bildschirm wandern.
+Dazu muss man sich folgendes überlegen: Bis jetzt hat die ''Animation'' das Rechteck stets an die gleiche Stelle gezeichnet. Damit die Position jetzt fortwährend verändert werden kann, muss sich die Animation bei jedem Aufruf der \textit{$ani\_default\_run$} Funktion an die vorhergehende Funktion erinnern. Dazu muss in \textit{Zeile 7} eine globale Variable vom Typ \textit{$led\_rect$} definiert werden:
+\begin{lstlisting}
+typedef struct {
+    led_point position;
+} global_data;
+\end{lstlisting}
+
+Diese wird in der \textit{$ani\_default\_init$} Funktion nach der \textit{if}-Abfrage initialisiert:
+\begin{lstlisting}
+if(global_vars != NULL){
+    g.position = led_point_(0,0);
+    return true;
+}
+\end{lstlisting}
+
+Jetzt kann der ''\textit{hart}''-codierte X und Y Wert durch die globale Variable ersetzt werden:
+\begin{lstlisting}
+draw_rect(led_rect_(g.position.x, g.position.y, 8, 8), led_color_(0xFF,0x00,0x00), canvas);
+\end{lstlisting}
+
+Wird jetzt der Simulator neu kompiliert und gestartet (durch Klick auf den grünen Pfeil), dann sollte alles so wie am Anfang, vor der Veränderung der Animation, aussehen.
+
+Damit sich das Rechteck jetzt nach rechts bewegt, sollte alle 10 Bilder der X Wert um eins erhöht werden. Erreicht dieser 8, befindet sich das Rechteck also außerhalb des Bildbereiches, dann wird er wieder auf 0 zurückgesetzt. Dazu wird folgender Code unter dem Aufruf von \textit{$draw\_rect$} eingefügt:
+\begin{lstlisting}
+if(ticks % 10 == 0){
+    g.position.x++;
+    // LED_WIDTH is defined as 8
+    if(g.position.x == LED_WIDTH){
+        g.position.x = 0;
+    }
+}
+\end{lstlisting}
+
+Das sich über den Bildschirm bewegende Rechteck sieht aber noch etwas hässlich aus, da es plötzlich auf der linken Seite wieder auftaucht, scheinbar dort hin springt.
+Die kann man schöner gestalten, indem man das Rechteck zwei mal zeichnet: Einmal das original und dann eine um 9 Pixel nach links verschobene Version:
+\begin{lstlisting}
+draw_rect(led_rect_(g.position.x, g.position.y, 8, 8), led_color_(0xFF,0x00,0x00), canvas);
+draw_rect(led_rect_(g.position.x-9, g.position.y, 8, 8), led_color_(0xFF,0x00,0x00), canvas);
+\end{lstlisting}
+
+Damit das ganze noch besser aussieht sollte man die Position erst dann zurücksetzen, wenn sie \textit{$LED\_WIDTH + 1$} erreicht hat:
+\begin{lstlisting}
+if(g.position.x == LED_WIDTH + 1){
+\end{lstlisting}
+
+Jetzt zeigt die Animation eine scheinbar unendliche Reihe von Rechtecken, die sich von rechts nach links über den Bildschirm bewegen.
+
+\subsubsection{Aufgaben:}
+\begin{itemize}
+\item Verändere die Geschwindigkeit der Animation, indem du die Zeile in der die ticks abgefragt werden veränderst.
+\item Ersetze \textit{$draw\_rect$} durch \textit{$fill\_rect$}. Was verändert sich.
+\item Lasse die Rechtecke von rechts nach links über den Bildschirm wandern.
+\item \textit{Etwas schwerer:} Lasse die Rechtecke von oben nach unten über den Bildschirm wandern.
+\end{itemize}
 
 \end{document}
