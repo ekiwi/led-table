@@ -1,6 +1,9 @@
 # gedit backups
 *~
 
+# Notepad++ backups
+*.bak
+
 # object files
 *.o
 
